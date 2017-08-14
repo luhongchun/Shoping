@@ -3,7 +3,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.Date;
-
+import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +31,27 @@ import com.example.demo1.entity.MsgPushEntity;
 import com.example.demo1.entity.YzTrade;
 import com.example.demo1.entity.YzTrade.TradeDetailV2;
 import com.example.demo1.entity.YzTrade.TradeOrderV2;
-import com.example.demo1.entity.ZhiqiShop;
+import com.example.demo1.entity.Shoping;
 import com.example.demo1.util.Md5Util;
 import com.google.gson.Gson;
 
+
 import net.minidev.json.JSONObject;
 import net.sf.json.JSONException;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.*;  
+import org.springframework.web.bind.annotation.*;  
+import org.springframework.ui.Model;
 
-
+import java.io.BufferedReader;  
+import java.io.FileInputStream;  
+import java.io.IOException;  
+import java.io.InputStream;  
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;  
+import java.net.URL;  
+import java.util.logging.Level;  
+import com.example.demo1.entity.StreamToString;
 /**
  * PushDemoController
  * 推送服务消息接收示例
@@ -82,8 +95,8 @@ public class PushDemoController<TradeBuyerMessage> {
     	System.out.println("******testPost***********");
     	return "hello world!";
     }
-   
     
+ 
     @RequestMapping(value = "/test", method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     @ResponseBody
     public String test(@RequestBody MsgPushEntity entity) {
@@ -234,6 +247,24 @@ public class PushDemoController<TradeBuyerMessage> {
     					}
             	}
                 		logger.info("********************************");
+                		try{  
+                            URL url = new URL("http://218.61.208.68:8008/getOrder?phoneNum="+phoneNum+"&productName="+productName);  
+                            HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();  
+                            //GET Request Define:   
+                            urlConnection.setRequestMethod("GET");  
+                            urlConnection.connect();  
+                              
+                            //Connection Response From Test Servlet  
+                            logger.info("Connection Response From Test Servlet");  
+                            InputStream inputStream = urlConnection.getInputStream();  
+                              
+                            //Convert Stream to String  
+                            String responseStr = StreamToString.ConvertToString(inputStream);  
+                            logger.info("responseStr:"+responseStr);  
+                        }catch(IOException e){  
+                        	logger.info("faluse");  
+                        }  
+                		
                 		productNameLive(skuUniqueCode,productTid,phoneNum,phoneNum2,phoneNum3,productName,productPicPath,childName,childClass,createdTime,endTime,productMonth,userCnt,num,productSumPrice);
                 		logger.info("********************************");
             }
@@ -246,15 +277,7 @@ public class PushDemoController<TradeBuyerMessage> {
          */
         return res;
     }
-    @RequestMapping(method = RequestMethod.GET, value = "getList/{id}")
-   	public String getProductName(@PathVariable String id){
-    	logger.info("*******id**********"+id);
-       	ZhiqiShop emp1 = zhiqiShopRepository.findOne(id);
-   		String message = emp1.getProductName();
-   		logger.info("message:"+message);
-   		return emp1.getProductName();
-       	
-       }
+   
     
     private int getDurationMonth(String pp, int num) {
     	logger.info("pp:"+pp+"num:"+num);
@@ -313,7 +336,7 @@ public class PushDemoController<TradeBuyerMessage> {
 	
 	){
     	logger.info("*******插入数据***********");
-    	ZhiqiShop zhiqishop1 = new ZhiqiShop();
+    	Shoping zhiqishop1 = new Shoping();
     	zhiqishop1.setSkuUniqueCode(skuUniqueCode);
     	zhiqishop1.setProductTid(productTid);
     	zhiqishop1.setPhoneNum(phoneNum);
@@ -335,6 +358,62 @@ public class PushDemoController<TradeBuyerMessage> {
     	
 		
 	}
+    /** 
+     * 根据电话和产品查找个人订单
+     * http://127.0.0.1:8008/getOrder?phoneNum=123456&productName=A 
+     * @param phoneNum
+     * @param productName
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "getOrder") 
+    @ResponseBody
+    public Shoping getByPhoneNumAndProductName(String phoneNum,String productName) { 
+      System.out.println("phoneNum:" + phoneNum+"productName:"+productName); 
+      Shoping user = zhiqiShopRepository.findByPhoneNumAndProductName(phoneNum,productName); 
+      return user;
+      /* if (null == user) { 
+    	  return "暂无数据"; 
+      } else { 
+    	  String message = user.getProductName();
+    	  logger.info("message:"+message);
+    	  return message; 
+    	 
+      } 
+    */
+    } 
+    /**
+     * 根据电话查询已购买产品
+     * @param phoneNum
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "getProduct") 
+    @ResponseBody
+    public List<Shoping> getByPhoneNum(String phoneNum) { 
+      logger.info("phoneNum:" + phoneNum); 
+      return (List<Shoping>)zhiqiShopRepository.findAllByPhoneNum(phoneNum); 
+    }
+    /**
+     * 查询全部
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "getAll") 
+    @ResponseBody
+    public List<Shoping> getAll() {
+    	return (List<Shoping>)zhiqiShopRepository.findAll();
+    }
+    /**
+     * 页面处理
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET,value ="product")
+    public String index(HttpServletRequest request) {
+		//逻辑处理
+		request.setAttribute("key", "HelloWord");
+		return "index";
+	}  
+    @RequestMapping(method = RequestMethod.GET,value ="renew")
+    public String home(HttpServletRequest request) {
+		return "home";
+	}  
 }
 
  

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <script charset="UTF-8">
+  //<![CDATA[ 
+  document.write('<meta http-equiv="content-Type" content="text/html;charset=utf-8"/>');
+$(document).ready(function () { 
+	$("button").click(function () { 
+		var phone = $("#phone").val();
+        // str1 = 123456;
+       // alert(phone);
+        var url =  "http://218.61.208.68:8008/getProduct?phoneNum="+phone; 
+        $.get(url, function (data, status) {
+             var phoneNum = data[0].phoneNum;
+             var productName = data[0].productName;
+             var productPicPath = data[0].productPicPath;
+             var createdTime = data[0].createdTime;
+             var endTime = data[0].endTime;
+             var productSumPrice = data[0].productSumPrice;
+          //   alert("电话："+phoneNum+"已购商品："+productName+"创建时间："+createdTime+"结束时间："+endTime+"购买价格："+productSumPrice);
+             document.getElementById('div').innerHTML="电话:"+phoneNum+"		已购产品:"+productName;
+             $("#div").val(data[0].phoneNum);
+             
+        });   
+    });
+});
+//]]>
+</script>  
+<body>
+<!--<span th:text="${key}"></span>-->
+手机号:<input type="text" id="phone"/>
+<button>已购买产品</button>
+<div id="div"></div>
+</body>
+</html>	

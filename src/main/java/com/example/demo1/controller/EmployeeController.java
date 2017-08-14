@@ -31,11 +31,13 @@ public class EmployeeController {
 		
 	}
 
-   /* @RequestMapping(method = RequestMethod.GET, value = "getList/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "getLists/{id}")
 	public String getEmployeeName(@PathVariable String id){
     	System.out.println("*******读取数据**********"+id);
 		Employee emp = employeeRepository.findOne(id);
-		return emp.getEmployeeName();
-	}*/
+		String a =  emp.getEmployeeName();
+		String b =  emp.getEmployeeAge();
+		return a+b;
+	}
 
 }

@@ -19,6 +19,7 @@ public class Employee {
 	private String id;
 	
     private String employeeName;
+    private String employeeAge;
 
 	public String getId() {
 		return id;
@@ -34,6 +35,14 @@ public class Employee {
 
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
+	}
+	
+	public String getEmployeeAge() {
+		return employeeAge;
+	}
+
+	public void setEmployeeAge(String employeeAge) {
+		this.employeeAge = employeeAge;
 	}
 
 }

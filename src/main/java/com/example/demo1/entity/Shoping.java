@@ -9,12 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "zhiqi_shop")
-public class ZhiqiShop {
+public class Shoping {
 	@Id
     @GeneratedValue(generator = "uuidGenerator")
     @Column(name = "id", unique = true, nullable = false, length = 32)
@@ -22,9 +23,11 @@ public class ZhiqiShop {
 	private String id;
 	private String skuUniqueCode;
 	private String productTid;
+	@NotNull 
 	private String phoneNum;
 	private String phoneNum2;
 	private String phoneNum3;
+	@NotNull 
 	private String productName;
 	private String productPicPath;
 	private String childName;
