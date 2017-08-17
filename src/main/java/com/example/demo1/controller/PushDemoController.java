@@ -247,25 +247,28 @@ public class PushDemoController<TradeBuyerMessage> {
     					}
             	}
                 		logger.info("********************************");
-                		try{  
-                            URL url = new URL("http://218.61.208.68:8008/getOrder?phoneNum="+phoneNum+"&productName="+productName);  
-                            HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();  
-                            //GET Request Define:   
-                            urlConnection.setRequestMethod("GET");  
-                            urlConnection.connect();  
-                              
-                            //Connection Response From Test Servlet  
-                            logger.info("Connection Response From Test Servlet");  
-                            InputStream inputStream = urlConnection.getInputStream();  
-                              
-                            //Convert Stream to String  
-                            String responseStr = StreamToString.ConvertToString(inputStream);  
-                            logger.info("responseStr:"+responseStr);  
-                        }catch(IOException e){  
-                        	logger.info("faluse");  
-                        }  
-                		
-                		productNameLive(skuUniqueCode,productTid,phoneNum,phoneNum2,phoneNum3,productName,productPicPath,childName,childClass,createdTime,endTime,productMonth,userCnt,num,productSumPrice);
+                		Shoping message;
+                		message = getByPhoneNumAndProductName(phoneNum,productName);
+                		if(message == null){
+	                		productNameLive(skuUniqueCode,productTid,phoneNum,phoneNum2,phoneNum3,productName,productPicPath,childName,childClass,createdTime,endTime,productMonth,userCnt,num,productSumPrice);
+	                		
+                		}else{
+                			logger.info("该用户已存在!");
+                			String  name = message.getProductName();
+                    		String phone = message.getPhoneNum();
+                    		logger.info("手机号："+phone+",产品名:"+name);
+                			
+                			Date updateEndTime = message.getEndTime();
+                    		logger.info("到期时间:"+updateEndTime);
+                    		Calendar cal1=Calendar.getInstance();
+            				cal1.setTime(updateEndTime);
+            		     	cal1.add(Calendar.MONTH, productMonth); // 当前时间加月份   
+            		     	updateEndTime = cal1.getTime(); 
+                    		logger.info("更新到期时间后:"+updateEndTime);
+            		     	message.setEndTime(updateEndTime);
+            		     	zhiqiShopRepository.save(message);
+            		     	logger.info("修改结束");
+                		}
                 		logger.info("********************************");
             }
             
