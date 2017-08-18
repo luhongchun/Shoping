@@ -9,7 +9,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo1.entity.Employee;
+//import com.example.demo1.entity.Employee;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,12 +27,12 @@ public class Demo1ApplicationTests {
 	
 	@Autowired
 	RestTemplate restTemplate;
-	@Test
-    public void testPost() throws Exception {
+	 /* @Test
+  public void testPost() throws Exception {
     	System.out.println("*******testPost***********");
 		Employee entity = new Employee();
 		Employee e = restTemplate.postForObject("http://218.61.208.68:8008/test",
                             entity, Employee.class);
 		System.out.println("*******testPost***********");
-    }
+    }*/
 }
