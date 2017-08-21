@@ -11,25 +11,45 @@ $(document).ready(function () {
        // alert(phone);
         var url =  "http://218.61.208.68:8008/getProduct?phoneNum="+phone; 
         $.get(url, function (data, status) {
-             var phoneNum = data[0].phoneNum;
-             var productName = data[0].productName;
-             var productPicPath = data[0].productPicPath;
-             var createdTime = data[0].createdTime;
-             var endTime = data[0].endTime;
-             var productSumPrice = data[0].productSumPrice;
-          //   alert("电话："+phoneNum+"已购商品："+productName+"创建时间："+createdTime+"结束时间："+endTime+"购买价格："+productSumPrice);
-             document.getElementById('div').innerHTML="电话:"+phoneNum+"		已购产品:"+productName;
-             $("#div").val(data[0].phoneNum);
+        	for(var i = 0; i<data.length;i++){
+            	//alert(i);
+            	 $("#father").prepend("<div width:100%>"+"电话:"+data[i].phoneNum+"已购产品:"+data[i].productName+"</div>");
+            	 $("#father").prepend("<hr>");
+            }
              
         });   
     });
 });
 //]]>
 </script>  
+<style>
+#phone{
+width:30%;
+}
+button{
+background-color:green;
+color:#fff;
+}
+#father{
+margin-left:25%;
+width:50%;
+height:auto;
+text-algin:center;
+background-color:grey;
+padding-left:5%;
+padding-right:5%;
+margin-top:100px;
+}
+#border{
+margin-left:40%;
+}
+</style>
 <body>
 <!--<span th:text="${key}"></span>-->
-手机号:<input type="text" id="phone"/>
+<div id="border">手机号:<input type="text" id="phone"/>
 <button>已购买产品</button>
-<div id="div"></div>
+</div>
+<div id="father"></div>
+
 </body>
 </html>	
