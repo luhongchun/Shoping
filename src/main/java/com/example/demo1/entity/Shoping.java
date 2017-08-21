@@ -28,6 +28,8 @@ public class Shoping {
 	private String phoneNum2;
 	private String phoneNum3;
 	@NotNull 
+	private String childMinding;
+	@NotNull 
 	private String productName;
 	private String productPicPath;
 	private String childName;
@@ -73,6 +75,12 @@ public class Shoping {
 	}
 	public void setPhoneNum3(String phoneNum3) {
 		this.phoneNum3 = phoneNum3;
+	}
+	public String getChildMinding() {
+		return childMinding;
+	}
+	public void setChildMinding(String childMinding) {
+		this.childMinding = childMinding;
 	}
 	public String getProductName() {
 		return productName;
